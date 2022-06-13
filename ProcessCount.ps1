@@ -10,4 +10,10 @@ $RoundRAM = [math]::Round($RAM,2)
 # Average CPU Usage
 $CpuLoad = (Get-WmiObject win32_processor | Measure-Object -property LoadPercentage -Average | Select Average ).Average
 
-echo "$Date  Processcount:  $psCount ; Used RAM: $RoundRAM ; Average CPU Load: $CpuLoad" >> C:\Users\dunca\Desktop\ProcessCountLog.txt
+#GPU Memory Total Use
+$GpuMemTotal = (((Get-Counter "\GPU Process Memory(*)\Local Usage").CounterSamples | where CookedValue).CookedValue | measure -sum).sum
+
+#GPU Usage  
+$GpuUseTotal = (((Get-Counter "\GPU Engine(*engtype_3D)\Utilization Percentage").CounterSamples | where CookedValue).CookedValue | measure -sum).sum
+
+echo "$Date  Processcount:  $psCount ; Used RAM: $RoundRAM ; Average CPU Load : $CpuLoad GB; GPU Usage: $([math]::Round($GpuUseTotal,2))%; GPU Memory: $([math]::Round($GpuMemTotal/1MB,2)) MB" >> C:\Users\dunca\Desktop\ProcessCountLog.txt
