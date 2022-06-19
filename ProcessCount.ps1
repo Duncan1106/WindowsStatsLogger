@@ -1,3 +1,7 @@
+## ====================== ##
+##   @Author Duncan1106   ##
+## ====================== ##
+
 # Reset file after restart
 $bootuptime = (Get-CimInstance -ClassName Win32_OperatingSystem).LastBootUpTime
 $CurrentDate = Get-Date
