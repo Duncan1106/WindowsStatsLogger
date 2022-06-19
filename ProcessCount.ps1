@@ -1,7 +1,13 @@
 # Reset file after restart
-Clear-Content "C:\Users\dunca\Desktop\ProcessCountLog.txt"
+$bootuptime = (Get-CimInstance -ClassName Win32_OperatingSystem).LastBootUpTime
+$CurrentDate = Get-Date
+$uptime = $CurrentDate - $bootuptime
+$minutes_up = $uptime.Minutes
 
-sleep -Seconds 1
+# one time use of clear content after reboot
+if ($minutes_up -cle "2"){
+    Clear-Content "C:\Users\dunca\Desktop\ProcessCountLog.txt"
+} 
 
 # Process Count
 $psCount = (Get-Process).Count
@@ -21,5 +27,6 @@ $GpuMemTotal = (((Get-Counter "\GPU Process Memory(*)\Local Usage").CounterSampl
 #GPU Usage  
 $GpuUseTotal = (((Get-Counter "\GPU Engine(*engtype_3D)\Utilization Percentage").CounterSamples | where CookedValue).CookedValue | measure -sum).sum
 
+# pack all data into a textfile
 echo "$Date  Processcount:  $psCount ; Used RAM: $RoundRAM GB; Average CPU Load : $CpuLoad %; GPU Usage: $([math]::Round($GpuUseTotal,2))%; GPU Memory: $([math]::Round($GpuMemTotal/1MB,2)) MB" >> C:\Users\dunca\Desktop\ProcessCountLog.txt
 exit
