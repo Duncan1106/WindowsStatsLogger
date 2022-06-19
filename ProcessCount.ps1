@@ -1,3 +1,8 @@
+# Reset file after restart
+Clear-Content "C:\Users\dunca\Desktop\ProcessCountLog.txt"
+
+sleep -Seconds 1
+
 # Process Count
 $psCount = (Get-Process).Count
 $Date = Get-Date
@@ -17,3 +22,4 @@ $GpuMemTotal = (((Get-Counter "\GPU Process Memory(*)\Local Usage").CounterSampl
 $GpuUseTotal = (((Get-Counter "\GPU Engine(*engtype_3D)\Utilization Percentage").CounterSamples | where CookedValue).CookedValue | measure -sum).sum
 
 echo "$Date  Processcount:  $psCount ; Used RAM: $RoundRAM GB; Average CPU Load : $CpuLoad %; GPU Usage: $([math]::Round($GpuUseTotal,2))%; GPU Memory: $([math]::Round($GpuMemTotal/1MB,2)) MB" >> C:\Users\dunca\Desktop\ProcessCountLog.txt
+exit
