@@ -43,3 +43,6 @@ Start the server
   start.bat
 ```
 
+## Security
+
+[![PSScriptAnalyzer](https://github.com/Duncan1106/WindowsStatsLogger/actions/workflows/powershell.yml/badge.svg)](https://github.com/Duncan1106/WindowsStatsLogger/actions/workflows/powershell.yml)
