@@ -46,3 +46,4 @@ Start the server
 ## Security
 
 [![PSScriptAnalyzer](https://github.com/Duncan1106/WindowsStatsLogger/actions/workflows/powershell.yml/badge.svg)](https://github.com/Duncan1106/WindowsStatsLogger/actions/workflows/powershell.yml)
+[![Codacy Security Scan](https://github.com/Duncan1106/WindowsStatsLogger/actions/workflows/codacy.yml/badge.svg)](https://github.com/Duncan1106/WindowsStatsLogger/actions/workflows/codacy.yml)
