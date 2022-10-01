@@ -44,6 +44,6 @@ $GpuUseTotal = (((Get-Counter "\GPU Engine(*engtype_3D)\Utilization Percentage")
 $GpuuseTotal_R = [math]::Round($GpuUseTotal,2)
 
 # pack all data into a textfile
-echo "$Date  Processcount:  $psCount; Used RAM: $($RAM_R)GB & $($Memory_R)%; CPU Load: $($CpuLoad)%; GPU Load: $($GpuUseTotal_R)%; GPU Memory: $($GpuMemTotal_R)MB" >> $DesktopPath
+Write-Output "$Date  Processcount:  $psCount; Used RAM: $($RAM_R)GB & $($Memory_R)%; CPU Load: $($CpuLoad)%; GPU Load: $($GpuUseTotal_R)%; GPU Memory: $($GpuMemTotal_R)MB" >> $DesktopPath
 exit
 exit
