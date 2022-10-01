@@ -33,7 +33,7 @@ $Memory = ((($CompObject.TotalVisibleMemorySize - $CompObject.FreePhysicalMemory
 $Memory_R = [math]::Round($Memory,2)
 
 # CPU Usage
-$CpuLoad = (Get-WmiObject win32_processor | Measure-Object -property LoadPercentage -Average | Select Average ).Average
+$CpuLoad = (Get-WmiObject win32_processor | Measure-Object -property LoadPercentage -Average | Select-Object Average ).Average
 
 #GPU Memory Total Use
 $GpuMemTotal = (((Get-Counter "\GPU Process Memory(*)\Local Usage").CounterSamples | Where-Object CookedValue).CookedValue | Measure-Object -sum).sum
