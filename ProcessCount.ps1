@@ -36,11 +36,11 @@ $Memory_R = [math]::Round($Memory,2)
 $CpuLoad = (Get-WmiObject win32_processor | Measure-Object -property LoadPercentage -Average | Select Average ).Average
 
 #GPU Memory Total Use
-$GpuMemTotal = (((Get-Counter "\GPU Process Memory(*)\Local Usage").CounterSamples | where CookedValue).CookedValue | measure -sum).sum
+$GpuMemTotal = (((Get-Counter "\GPU Process Memory(*)\Local Usage").CounterSamples | Where-Object CookedValue).CookedValue | Measure-Object -sum).sum
 $GpuMemTotal_R = [math]::Round($GpuMemTotal/1MB,2)
 
 #GPU Usage
-$GpuUseTotal = (((Get-Counter "\GPU Engine(*engtype_3D)\Utilization Percentage").CounterSamples | where CookedValue).CookedValue | measure -sum).sum
+$GpuUseTotal = (((Get-Counter "\GPU Engine(*engtype_3D)\Utilization Percentage").CounterSamples | Where-Object CookedValue).CookedValue | Measure-Object -sum).sum
 $GpuuseTotal_R = [math]::Round($GpuUseTotal,2)
 
 # pack all data into a textfile
