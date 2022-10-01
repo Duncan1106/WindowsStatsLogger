@@ -8,7 +8,7 @@ $CurrentDate = Get-Date
 $uptime = $CurrentDate - $bootuptime
 $minutes_up = $uptime.Minutes
 $hours_up = $uptime.Hours
-echo "$hours_up"
+Write-Output "$hours_up"
 
 # user specific desktop folder
 $DesktopPath = "C:\Users\dunca\Desktop\ProcessCountLog.txt"
