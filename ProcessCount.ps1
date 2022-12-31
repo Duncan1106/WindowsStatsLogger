@@ -53,4 +53,4 @@ $gpuUsageRounded = [math]::Round($gpuUsage,2)
 # pack all data into a textfile
 Write-Output "$Date  Processcount:  $psCount; Used usedRAM: $($usedRAMRounded)GB & $($ramUsageRounded)%; CPU Load: $($cpuUsage)%; GPU Load: $($gpuUsageRounded)%; GPU Memory: $($gpuMemoryUsageRounded)MB" >> $DesktopPath
 exit
-
+exit
