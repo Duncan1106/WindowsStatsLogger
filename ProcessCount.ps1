@@ -1,49 +1,56 @@
 ## ====================== ##
 ##   @Author Duncan1106   ##
 ## ====================== ##
+##
+## This script collects information about the system, including the number of processes running,
+## the amount of used usedRAM and CPU usage, and the usage of the GPU. It then outputs this information
+## to a file on the user's desktop.
+##
 
-# Reset file after restart
+
+# Get system boot time
 $bootuptime = (Get-CimInstance -ClassName Win32_OperatingSystem).LastBootUpTime
+
+# Calculate uptime
 $CurrentDate = Get-Date
 $uptime = $CurrentDate - $bootuptime
 $minutes_up = $uptime.Minutes
 $hours_up = $uptime.Hours
-Write-Output "$hours_up"
+$days_up = $uptime.Days
 
-# user specific desktop folder
-$DesktopPath = "C:\Users\dunca\Desktop\ProcessCountLog.txt"
-# $DesktopPath = [Environment]::GetFolderPath("Desktop") + "\ProcessCountLog.txt"
+# User specific desktop folder
+$desktopPath = "C:\Users\dunca\Desktop\ProcessCountLog.txt"
 
-# one time use of clear content after reboot
-if ($minutes_up -cle 1 -and $hours_up -cmatch 0){
-    Clear-Content "$DesktopPath"
+# Clear file contents after reboot
+if ($minutes_up -le 1 -and $hours_up -eq 0 -and $days_up -eq 0) {
+    Clear-Content "$desktopPath"
 }
 
 # Process Count
 $psCount = (Get-Process).Count
 $Date = Get-Date
 
-# Used RAM
-$CompObject =  Get-WmiObject -Class WIN32_OperatingSystem
-$RAM = (($CompObject.TotalVisibleMemorySize - $CompObject.FreePhysicalMemory)/1024/1024)
-$RAM_R = [math]::Round($RAM,2)
+# Used usedRAM
+$os =  Get-WmiObject -Class WIN32_OperatingSystem
+$usedRAM = (($os.TotalVisibleMemorySize - $os.FreePhysicalMemory)/1024/1024)
+$usedRAMRounded = [math]::Round($usedRAM,2)
 
-# Ram usage in %
-$Memory = ((($CompObject.TotalVisibleMemorySize - $CompObject.FreePhysicalMemory)*100)/ $CompObject.TotalVisibleMemorySize)
-$Memory_R = [math]::Round($Memory,2)
+# usedRAM usage in %
+$ramUsage  = ((($os.TotalVisibleMemorySize - $os.FreePhysicalMemory)*100)/ $os.TotalVisibleMemorySize)
+$ramUsageRounded = [math]::Round($ramUsage ,2)
 
 # CPU Usage
-$CpuLoad = (Get-WmiObject win32_processor | Measure-Object -property LoadPercentage -Average | Select-Object Average ).Average
+$cpuUsage = (Get-WmiObject win32_processor | Measure-Object -property LoadPercentage -Average | Select-Object Average ).Average
 
 #GPU Memory Total Use
-$GpuMemTotal = (((Get-Counter "\GPU Process Memory(*)\Local Usage").CounterSamples | Where-Object CookedValue).CookedValue | Measure-Object -sum).sum
-$GpuMemTotal_R = [math]::Round($GpuMemTotal/1MB,2)
+$gpuMemoryUsage = (((Get-Counter "\GPU Process Memory(*)\Local Usage").CounterSamples | Where-Object CookedValue).CookedValue | Measure-Object -sum).sum
+$gpuMemoryUsageRounded = [math]::Round($gpuMemoryUsage/1MB,2)
 
 #GPU Usage
-$GpuUseTotal = (((Get-Counter "\GPU Engine(*engtype_3D)\Utilization Percentage").CounterSamples | Where-Object CookedValue).CookedValue | Measure-Object -sum).sum
-$GpuuseTotal_R = [math]::Round($GpuUseTotal,2)
+$gpuUsage = (((Get-Counter "\GPU Engine(*engtype_3D)\Utilization Percentage").CounterSamples | Where-Object CookedValue).CookedValue | Measure-Object -sum).sum
+$gpuUsageRounded = [math]::Round($gpuUsage,2)
 
 # pack all data into a textfile
-Write-Output "$Date  Processcount:  $psCount; Used RAM: $($RAM_R)GB & $($Memory_R)%; CPU Load: $($CpuLoad)%; GPU Load: $($GpuUseTotal_R)%; GPU Memory: $($GpuMemTotal_R)MB" >> $DesktopPath
+Write-Output "$Date  Processcount:  $psCount; Used usedRAM: $($usedRAMRounded)GB & $($ramUsageRounded)%; CPU Load: $($cpuUsage)%; GPU Load: $($gpuUsageRounded)%; GPU Memory: $($gpuMemoryUsageRounded)MB" >> $DesktopPath
 exit
-exit
+
