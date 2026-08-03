@@ -42,15 +42,24 @@ $ramUsageRounded = [math]::Round($ramUsage ,2)
 # CPU Usage
 $cpuUsage = (Get-WmiObject win32_processor | Measure-Object -property LoadPercentage -Average | Select-Object Average ).Average
 
-#GPU Memory Total Use
-$gpuMemoryUsage = (((Get-Counter "\GPU Process Memory(*)\Local Usage").CounterSamples | Where-Object CookedValue).CookedValue | Measure-Object -sum).sum
-$gpuMemoryUsageRounded = [math]::Round($gpuMemoryUsage/1MB,2)
+#GPU Memory Total Use - with error handling for systems without dedicated GPU
+try {
+    $gpuMemoryUsage = (((Get-Counter "\GPU Process Memory(*)\Local Usage").CounterSamples | Where-Object CookedValue).CookedValue | Measure-Object -sum).sum
+    $gpuMemoryUsageRounded = [math]::Round($gpuMemoryUsage/1MB,2)
+} catch {
+    $gpuMemoryUsageRounded = 0
+    Write-Warning "GPU memory counters not available: $_"
+}
 
-#GPU Usage
-$gpuUsage = (((Get-Counter "\GPU Engine(*engtype_3D)\Utilization Percentage").CounterSamples | Where-Object CookedValue).CookedValue | Measure-Object -sum).sum
-$gpuUsageRounded = [math]::Round($gpuUsage,2)
+#GPU Usage - with error handling for systems without dedicated GPU
+try {
+    $gpuUsage = (((Get-Counter "\GPU Engine(*engtype_3D)\Utilization Percentage").CounterSamples | Where-Object CookedValue).CookedValue | Measure-Object -sum).sum
+    $gpuUsageRounded = [math]::Round($gpuUsage,2)
+} catch {
+    $gpuUsageRounded = 0
+    Write-Warning "GPU utilization counters not available: $_"
+}
 
 # pack all data into a textfile
 Write-Output "$Date  Processcount:  $psCount; Used usedRAM: $($usedRAMRounded)GB & $($ramUsageRounded)%; CPU Load: $($cpuUsage)%; GPU Load: $($gpuUsageRounded)%; GPU Memory: $($gpuMemoryUsageRounded)MB" >> $DesktopPath
-exit
 exit
