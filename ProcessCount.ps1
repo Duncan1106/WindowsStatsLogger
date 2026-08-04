@@ -19,7 +19,8 @@ $hours_up = $uptime.Hours
 $days_up = $uptime.Days
 
 # User specific desktop folder
-$desktopPath = Join-Path -Path $env:USERPROFILE -ChildPath "Desktop\ProcessCountLog.txt"
+$desktopDirectory = [Environment]::GetFolderPath([Environment+SpecialFolder]::DesktopDirectory)
+$desktopPath = Join-Path -Path $desktopDirectory -ChildPath "ProcessCountLog.txt"
 
 # Clear file contents after reboot
 if ($minutes_up -le 1 -and $hours_up -eq 0 -and $days_up -eq 0) {
